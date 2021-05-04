@@ -65,6 +65,13 @@ class Application():
         self.delete_button.place(relx=0.87, rely=0.015, relwidth=0.1)
 
         # Edit a item
+        self.id_label_edit = Label(self.root, text="ID", font=("Sans-serif", 20))
+        self.id_label_edit.place(relx=0.53, rely=0.17)
+
+        self.id_entry_edit = Entry(self.root, bd=4)
+        self.id_entry_edit.place(relx=0.57, rely=0.18)
+
+
         self.edit_label = Label(self.root, text="Edit", font=("Sans-serif", 20))
         self.edit_label.place(relx=0.7, rely=0.17)
 
@@ -77,7 +84,7 @@ class Application():
         self.optionmenu_edit = OptionMenu(self.root, self.edit_select, "name", "description", "urgency", "date")
         self.optionmenu_edit.place(relx=0.85, rely=0.17)
 
-        self.update_button = Button(self.root, text="Update", bd=4)
+        self.update_button = Button(self.root, text="Update", bd=4, command=self.edit_task)
         self.update_button.place(relx=0.93, rely=0.17)
 
         # Save
@@ -149,6 +156,23 @@ class Application():
         self.conection_database.commit()
     
 
+    def edit_task(self):
+        self.conection_database = connect(
+            host="localhost",
+            port=3306,
+            user="root",
+            passwd="password",
+            database="tasks_manager"
+        )
+
+        self.cursor = self.conection_database.cursor()
+
+        self.cursor.execute(f"""UPDATE tasks set {self.edit_select.get()} = '{self.edit_entry.get()}' WHERE id = '{self.id_entry_edit.get()}'""")
+        self.select_list()
+        messagebox.showinfo("Updated", "The task was updated.")
+        self.conection_database.commit()
+    
+
     def save_task(self):
         self.conection = connect(
             host="localhost",
@@ -167,7 +191,7 @@ class Application():
             host="localhost",
             port=3306,
             user="root",
-            passwd="password",
+            passwd="Vivi120989",
             database="tasks_manager"
         )
 
