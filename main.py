@@ -51,5 +51,31 @@ class Application():
         self.date_entry = Entry(self.root, bd=4)
         self.date_entry.place(relx=0.1, rely=0.34)
 
+        # Delete
+        self.id_label = Label(self.root, text="ID", font=("Sans-serif", 20))
+        self.id_label.place(relx=0.7, rely=0.01)
+
+        self.id_entry = Entry(self.root, bd=4)
+        self.id_entry.place(relx=0.75, rely=0.017)
+
+        self.delete_button = Button(self.root, bd=4, text="Delete")
+        self.delete_button.place(relx=0.87, rely=0.015, relwidth=0.1)
+
+        # Edit a item
+        self.edit_label = Label(self.root, text="Edit", font=("Sans-serif", 20))
+        self.edit_label.place(relx=0.7, rely=0.17)
+
+        self.edit_entry = Entry(self.root, bd=4)
+        self.edit_entry.place(relx=0.75, rely=0.18)
+
+        self.edit_select = StringVar(self.root)
+        self.edit_select.set("name")
+        
+        self.optionmenu_edit = OptionMenu(self.root, self.edit_select, "name", "description", "urgency", "date")
+        self.optionmenu_edit.place(relx=0.85, rely=0.17)
+
+        self.update_button = Button(self.root, text="Update", bd=4)
+        self.update_button.place(relx=0.93, rely=0.17)
+
 
 Application()
