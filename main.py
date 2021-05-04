@@ -61,7 +61,7 @@ class Application():
         self.id_entry = Entry(self.root, bd=4)
         self.id_entry.place(relx=0.75, rely=0.017)
 
-        self.delete_button = Button(self.root, bd=4, text="Delete")
+        self.delete_button = Button(self.root, bd=4, text="Delete", command=self.delete_task)
         self.delete_button.place(relx=0.87, rely=0.015, relwidth=0.1)
 
         # Edit a item
@@ -113,6 +113,22 @@ class Application():
         self.date_entry.delete(0, END)
     
 
+    def delete_task(self):
+        self.conection_database = connect(
+            host="localhost",
+            port=3306,
+            user="root",
+            passwd="password",
+            database="tasks_manager"
+        )
+
+        self.cursor = self.conection_database.cursor()
+        self.cursor.execute(f"DELETE FROM tasks WHERE id = {self.id_entry.get()}")
+        messagebox.showinfo("Task Deleted", "The task was deleted from the table sucessfully!")
+        self.select_list()
+        self.conection_database.commit()
+    
+
     def select_list(self):
         self.listTask.delete(*self.listTask.get_children())
         self.conection_database = connect(
@@ -129,6 +145,8 @@ class Application():
         lista = self.cursor.fetchall()
         for i in lista:
             self.listTask.insert("", END, values=i)
+        
+        self.conection_database.commit()
     
 
     def save_task(self):
@@ -174,6 +192,7 @@ class Application():
         self.clear_task_entry()
         messagebox.showinfo("Task Saved", "The Task was saved sucessfully!")
         self.select_list()
+        self.cursor.commit()
 
 
 Application()
