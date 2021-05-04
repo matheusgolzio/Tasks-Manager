@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import ttk
+from tkinter import messagebox
 from mysql.connector import connect
 
 
@@ -79,7 +80,7 @@ class Application():
         self.update_button.place(relx=0.93, rely=0.17)
 
         # Save
-        self.save_button = Button(self.root, text="Save Task", bd=4)
+        self.save_button = Button(self.root, text="Save Task", bd=4, command=self.save_task)
         self.save_button.place(relx=0.01, rely=0.42, relwidth=0.13)
 
         # TreeView
@@ -103,7 +104,49 @@ class Application():
         self.scroolList = Scrollbar(self.root, orient='vertical')
         self.listTask.configure(yscroll=self.scroolList.set)
         self.scroolList.place(relx=0.98, rely=0.5, relwidth=0.02, relheight=0.5)
- 
+    
+
+    def save_task(self):
+        self.conection = connect(
+            host="localhost",
+            port=3306,
+            user="root",
+            passwd="password"
+        )
+
+        self.cursor = self.conection.cursor()
+
+        self.cursor.execute("CREATE DATABASE IF NOT EXISTS tasks_manager")
+
+        self.conection.commit()
+
+        self.conection_database = connect(
+            host="localhost",
+            port=3306,
+            user="root",
+            passwd="password",
+            database="tasks_manager"
+        )
+
+        self.cursor = self.conection_database.cursor()
+
+        self.cursor.execute("""CREATE TABLE IF NOT EXISTS tasks (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+            name VARCHAR(100) NOT NULL,
+            description VARCHAR(500),
+            urgency VARCHAR(10),
+            date_of_task VARCHAR(20)
+        );""")
+
+        self.name = self.name_entry.get()
+        self.desc = self.desc_entry.get()
+        self.urgency = self.urgency.get()
+        self.date_of_task = self.date_entry.get()
+
+        self.cursor.execute(f"""INSERT INTO tasks (name, description, urgency, date_of_task)
+        VALUES ('{self.name}', '{self.desc}', '{self.urgency}', '{self.date_of_task}')""")
+        self.conection_database.commit()
+        messagebox.showinfo("Task Saved", "The Task was saved sucessfully!")
 
 
 Application()
