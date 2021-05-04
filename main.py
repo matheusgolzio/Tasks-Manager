@@ -12,6 +12,7 @@ class Application():
         self.root = root
         self.tela()
         self.widgets()
+        self.select_list()
         self.root.mainloop()
 
     
@@ -106,6 +107,30 @@ class Application():
         self.scroolList.place(relx=0.98, rely=0.5, relwidth=0.02, relheight=0.5)
     
 
+    def clear_task_entry(self):
+        self.name_entry.delete(0, END)
+        self.desc_entry.delete(0, END)
+        self.date_entry.delete(0, END)
+    
+
+    def select_list(self):
+        self.listTask.delete(*self.listTask.get_children())
+        self.conection_database = connect(
+            host="localhost",
+            port=3306,
+            user="root",
+            passwd="password",
+            database="tasks_manager"
+        )
+
+        self.cursor = self.conection_database.cursor()
+
+        self.cursor.execute(""" SELECT id, name, description, urgency, date_of_task FROM tasks; """)
+        lista = self.cursor.fetchall()
+        for i in lista:
+            self.listTask.insert("", END, values=i)
+    
+
     def save_task(self):
         self.conection = connect(
             host="localhost",
@@ -146,7 +171,9 @@ class Application():
         self.cursor.execute(f"""INSERT INTO tasks (name, description, urgency, date_of_task)
         VALUES ('{self.name}', '{self.desc}', '{self.urgency}', '{self.date_of_task}')""")
         self.conection_database.commit()
+        self.clear_task_entry()
         messagebox.showinfo("Task Saved", "The Task was saved sucessfully!")
+        self.select_list()
 
 
 Application()
