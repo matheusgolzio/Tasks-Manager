@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import ttk
 from mysql.connector import connect
 
 
@@ -76,6 +77,33 @@ class Application():
 
         self.update_button = Button(self.root, text="Update", bd=4)
         self.update_button.place(relx=0.93, rely=0.17)
+
+        # Save
+        self.save_button = Button(self.root, text="Save Task", bd=4)
+        self.save_button.place(relx=0.01, rely=0.42, relwidth=0.13)
+
+        # TreeView
+        self.listTask = ttk.Treeview(self.root, height=3,
+                                     column=("col1", "col2", "col3", "col4", "col5"))
+        self.listTask.heading("#0", text="")
+        self.listTask.heading("#1", text="ID")
+        self.listTask.heading("#2", text="Name")
+        self.listTask.heading("#3", text="Description")
+        self.listTask.heading("#4", text="Urgency")
+        self.listTask.heading("#5", text="Date")
+
+        self.listTask.column("#0", width=1)
+        self.listTask.column("#1", width=50)
+        self.listTask.column("#2", width=200)
+        self.listTask.column("#3", width=125)
+        self.listTask.column("#4", width=125)
+        self.listTask.column("#5", width=125)
+        self.listTask.place(relx=0, rely=0.5, relwidth=0.98, relheight=0.5)
+
+        self.scroolList = Scrollbar(self.root, orient='vertical')
+        self.listTask.configure(yscroll=self.scroolList.set)
+        self.scroolList.place(relx=0.98, rely=0.5, relwidth=0.02, relheight=0.5)
+ 
 
 
 Application()
