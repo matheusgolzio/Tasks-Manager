@@ -191,7 +191,7 @@ class Application():
             host="localhost",
             port=3306,
             user="root",
-            passwd="Vivi120989",
+            passwd="password",
             database="tasks_manager"
         )
 
